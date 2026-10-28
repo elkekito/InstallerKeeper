@@ -1,0 +1,45 @@
+# Build output
+bin/
+obj/
+artifacts/
+publish/
+
+# Local-only rolling snapshots
+/Backup/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Local/runtime data
+*.log
+*.tmp
+*.bak
+InstallerKeeper.settings.json
+InstallerKeeper.db
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Never commit installer repositories or downloaded binaries
+Installers/
+Downloads/
+*.exe
+*.msi
+*.msix
+*.msixbundle
+*.appx
+*.appxbundle
+
+# GitHub Actions are intentionally not used in this project
+.github/workflows/
+
+# Documentación interna: se mantiene solo en local, no se publica
+CLAUDE.md
+tecdoc.md
+handoff.md
+CHANGELOG.md

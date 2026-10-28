@@ -1,0 +1,193 @@
+<Window x:Class="InstallerKeeper.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Opciones generales"
+        Width="860" Height="620" MinWidth="780" MinHeight="540"
+        Foreground="{DynamicResource TextBrush}"
+        Background="{DynamicResource PanelBrush}"
+        WindowStartupLocation="CenterOwner"
+        Icon="{StaticResource BrandIcon}">
+    <Window.Resources>
+        <Style x:Key="SettingsNavStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="11,10"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="NavBorder" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource SelectedNavBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="178"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+        <Border Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource AppBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="16,20">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,24">
+                    <Image Source="{StaticResource BrandIcon}" Width="27" Height="27" Margin="0,0,8,0"/>
+                    <TextBlock Text="Opciones" FontSize="17" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel>
+                    <RadioButton x:Name="GeneralNavRadio" Style="{StaticResource SettingsNavStyle}" Tag="General" GroupName="SettingsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource SettingsIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="General"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SettingsNavStyle}" Tag="Folders" GroupName="SettingsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource FolderIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Carpetas"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SettingsNavStyle}" Tag="Downloads" GroupName="SettingsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource DownloadIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Descargas"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SettingsNavStyle}" Tag="Interface" GroupName="SettingsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource GridIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Interfaz"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SettingsNavStyle}" Tag="About" GroupName="SettingsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource HelpIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Acerca de"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Grid.Row="0" Margin="28,25,28,12">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock x:Name="SectionTitle" Text="General" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock x:Name="SectionSubtitle" Text="Configura la carpeta y el comportamiento de InstallerKeeper." Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,0"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <StackPanel x:Name="GeneralPage" Visibility="Visible">
+                        <TextBlock Text="Al actualizar un instalador" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="ReplaceRadioButton" Content="Reemplazar el archivo existente" GroupName="DownloadPolicy"/>
+                        <RadioButton x:Name="ArchiveRadioButton" Content="Mover el anterior a una carpeta de archivo" GroupName="DownloadPolicy"/>
+                        <RadioButton x:Name="KeepAllRadioButton" Content="Mantener todas las versiones" GroupName="DownloadPolicy"/>
+                        <CheckBox x:Name="CheckOnStartupCheckBox" Content="Comprobar al iniciar la aplicación" Margin="0,16,0,0"/>
+                        <TextBlock Text="Después de analizar la carpeta, comprobará en WinGet las aplicaciones identificadas y no excluidas."
+                                   TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="22,2,0,0"/>
+                        <TextBlock Text="Avisos de descarga" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,24,0,4"/>
+                        <TextBlock Text="Al activarlo se ocultan todos los cuadros de descarga y promoción. Los paquetes que superen las comprobaciones de seguridad se promoverán sin pedir confirmación, incluso con avisos; los avisos, errores y archivos retenidos se indicarán en la ventana principal." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,5"/>
+                        <CheckBox x:Name="SuppressDownloadWarningsCheckBox" Content="Ocultar todos los mensajes de descarga y promoción" Margin="0,5,0,0"/>
+                        <Button Content="Restaurar mensajes de aviso" HorizontalAlignment="Left" Margin="22,5,0,0" Click="RestoreDownloadWarnings_Click"/>
+                        <TextBlock Text="Promoción automática" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,24,0,4"/>
+                        <TextBlock Text="Al activarla, los paquetes que superen las comprobaciones de seguridad (firma Authenticode y revocación válidas, o ZIP con el SHA-256 oficial coincidente) y no tengan avisos se promoverán sin pedir confirmación, con la política de actualización elegida. Con «Reemplazar», el instalador anterior se sustituye. Si hay avisos, se pedirá confirmación. Al terminar se muestra un mensaje de descarga completada, salvo que ocultes los mensajes. La descarga sigue iniciándose a mano." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,5"/>
+                        <CheckBox x:Name="AutoPromoteDownloadsCheckBox" Content="Promover automáticamente las descargas verificadas" Margin="0,5,0,16"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="FoldersPage" Visibility="Collapsed">
+                        <TextBlock Text="Carpeta supervisada" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="InstallerKeeper analiza únicamente los archivos de la carpeta que elijas." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,13"/>
+                        <TextBox x:Name="FolderPathSummary" IsReadOnly="True" MinHeight="36"/>
+                        <Button Content="Elegir carpeta…" HorizontalAlignment="Left" Margin="0,10,0,12" Click="BrowseFolder_Click"/>
+                        <CheckBox x:Name="IncludeSubdirectoriesCheckBox" Content="Incluir subcarpetas"/>
+                        <TextBlock Text="Carpeta del archivo de versiones anteriores" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,24,0,0"/>
+                        <TextBlock Text="Vacío conserva la carpeta .Archive bajo la carpeta supervisada. Las subcarpetas de los instaladores se reproducen dentro del archivo." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,7"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBox x:Name="ArchiveFolderPathTextBox" MinHeight="36" IsReadOnly="True" ToolTip="Vacío: ubicación predeterminada"/>
+                            <Button Grid.Column="1" Content="Examinar…" Margin="9,0,0,0" Click="BrowseArchiveFolder_Click"/>
+                            <Button Grid.Column="2" Content="Predeterminada" Margin="7,0,0,0" Click="ResetArchiveFolder_Click"/>
+                        </Grid>
+                        <Button Content="Limpiar y purgar archivo de versiones…" HorizontalAlignment="Left" Margin="0,8,0,0" Click="OpenArchiveCleanup_Click"/>
+                        <TextBlock Text="Carpeta de descarga temporal" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,24,0,0"/>
+                        <TextBlock Text="Vacío almacena las descargas en la carpeta temporal del sistema (%TEMP%\InstallerKeeper\Downloads) y no crea carpetas adicionales en la biblioteca." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,7"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBox x:Name="StagingFolderPathTextBox" MinHeight="36" IsReadOnly="True" ToolTip="Vacío: ubicación predeterminada"/>
+                            <Button Grid.Column="1" Content="Examinar…" Margin="9,0,0,0" Click="BrowseStagingFolder_Click"/>
+                            <Button Grid.Column="2" Content="Predeterminada" Margin="7,0,0,0" Click="ResetStagingFolder_Click"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel x:Name="DownloadsPage" Visibility="Collapsed">
+                        <TextBlock Text="Nombre de los paquetes descargados" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="Elige si el archivo nuevo mantiene el nombre de la aplicación y actualiza solo la versión, o si usa el nombre publicado por WinGet." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,10"/>
+                        <RadioButton x:Name="ApplicationVersionNameRadio" Content="Mantener el nombre actual y cambiar solo la versión" GroupName="DownloadNameFormat" Margin="0,3"/>
+                        <RadioButton x:Name="WingetNameRadio" Content="Usar el nombre de archivo de la descarga de WinGet" GroupName="DownloadNameFormat" Margin="0,3"/>
+                        <TextBlock Text="La política de conservación (Replace, Archive o KeepAll) se configura en General." FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,24,0,0"/>
+                        <TextBlock Text="Las preferencias de descarga e identificación se guardan por aplicación." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,7,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="InterfacePage" Visibility="Collapsed">
+                        <TextBlock Text="Diseño de la ventana principal" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="Los dos diseños incluyen los mismos filtros y acciones; elige cómo quieres organizar la biblioteca." TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,12"/>
+                        <ComboBox x:Name="MainLayoutComboBox"
+                                  Width="220" HorizontalAlignment="Left" Height="36" Margin="0,0,0,24">
+                            <ComboBoxItem Content="Panel de trabajo" Tag="WorkPanel"/>
+                            <ComboBoxItem Content="Barra lateral" Tag="Sidebar"/>
+                        </ComboBox>
+                        <TextBlock Text="Tema de la aplicación" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="Elige el aspecto claro u oscuro de InstallerKeeper." Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,12"/>
+                        <ComboBox x:Name="ThemeComboBox"
+                                  Width="190" HorizontalAlignment="Left" Height="36">
+                            <ComboBoxItem Content="Claro"/>
+                            <ComboBoxItem Content="Oscuro"/>
+                            <ComboBoxItem Content="Sistema"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel x:Name="AboutPage" Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Image Source="{StaticResource BrandIcon}" Width="54" Height="54" Margin="0,0,13,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="InstallerKeeper" FontSize="23" FontWeight="Bold" Foreground="{DynamicResource TextBrush}"/>
+                                <TextBlock Text="Mantén tus instaladores siempre actualizados" Foreground="{DynamicResource MutedBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Text="InstallerKeeper analiza archivos instaladores, consulta versiones oficiales y permite descargar nuevas versiones. No instala ni modifica software del sistema." TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,14"/>
+                        <TextBlock Text="Los nombres y marcas de terceros pertenecen a sus respectivos propietarios. InstallerKeeper no implica afiliación ni respaldo por parte de los fabricantes consultados." TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,14"/>
+                        <TextBlock Text="© 2026 InstallerKeeper. Todos los derechos reservados." Foreground="{DynamicResource TextBrush}" Margin="0,0,0,12"/>
+                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Margin="0,17,0,12"/>
+                        <TextBlock Text="Licencia de InstallerKeeper" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,4"/>
+                        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,12">
+                            InstallerKeeper se distribuye bajo la licencia MIT.
+                            <LineBreak/><Hyperlink NavigateUri="https://github.com/elkekito/InstallerKeeper/blob/main/LICENSE" RequestNavigate="LicenseLink_RequestNavigate">Consultar el archivo LICENSE</Hyperlink>
+                        </TextBlock>
+                        <TextBlock Text="Licencias de componentes incluidos y herramientas" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,4"/>
+                        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}">
+                            La distribución autocontenida incorpora componentes de .NET para Windows y utiliza el Administrador de paquetes de Windows (WinGet). El proyecto no declara paquetes NuGet de terceros.
+                            <LineBreak/><Hyperlink NavigateUri="https://github.com/dotnet/core/blob/main/license-information-windows.md" RequestNavigate="LicenseLink_RequestNavigate">Licencias de .NET para Windows</Hyperlink>
+                            <LineBreak/><Hyperlink NavigateUri="https://dotnet.microsoft.com/en-us/dotnet_library_license.htm" RequestNavigate="LicenseLink_RequestNavigate">Licencia de bibliotecas de .NET</Hyperlink>
+                            <LineBreak/><Hyperlink NavigateUri="https://github.com/dotnet/wpf/blob/main/LICENSE.TXT" RequestNavigate="LicenseLink_RequestNavigate">Licencia del código fuente de WPF (MIT)</Hyperlink>
+                            <LineBreak/><Hyperlink NavigateUri="https://github.com/microsoft/winget-cli/blob/master/LICENSE" RequestNavigate="LicenseLink_RequestNavigate">Licencia de Windows Package Manager CLI (MIT)</Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="24,0,28,22">
+            <Button Content="Guardar" Background="{DynamicResource PrimaryBrush}" Foreground="White" BorderThickness="0" Padding="20,8" Margin="0,0,9,0" Click="Save_Click"/>
+            <Button Content="Cancelar" IsCancel="True" Padding="18,8"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,208 @@
+<Window x:Class="InstallerKeeper.AppOptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Opciones de aplicación"
+        Width="860" Height="640" MinWidth="780" MinHeight="560"
+        Foreground="{DynamicResource TextBrush}"
+        Background="{DynamicResource PanelBrush}"
+        WindowStartupLocation="CenterOwner"
+        Icon="{StaticResource BrandIcon}">
+    <Window.Resources>
+        <Style x:Key="AppOptionsNavStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="NavBorder" Background="Transparent" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource SelectedNavBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource NeutralBadgeBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Left Navigation Sidebar -->
+        <Border Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource AppBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="16,20">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+                    <DockPanel LastChildFill="True">
+                        <Border Width="36" Height="36" CornerRadius="8" Background="{DynamicResource NeutralBadgeBrush}" Margin="0,0,10,0">
+                            <Path Data="{StaticResource PackageIconGeometry}" Fill="{DynamicResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleText" Text="Opciones de app" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="Configuración local" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </DockPanel>
+                </StackPanel>
+
+                <StackPanel>
+                    <RadioButton x:Name="GeneralNavRadio" Style="{StaticResource AppOptionsNavStyle}" Tag="General" GroupName="AppOptionsSections" IsChecked="True" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource SettingsIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="General"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource AppOptionsNavStyle}" Tag="OfficialData" GroupName="AppOptionsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource ShieldCheckGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Datos oficiales"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource AppOptionsNavStyle}" Tag="Sources" GroupName="AppOptionsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource PackageIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Fuentes"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource AppOptionsNavStyle}" Tag="Downloads" GroupName="AppOptionsSections" Checked="Section_Changed">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource DownloadIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                            <TextBlock Text="Descargas"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Right Content Area -->
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Margin="24,20,24,14" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Section Header -->
+                <TextBlock x:Name="SectionTitle" Text="General" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock x:Name="SubtitleText" Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,18" TextWrapping="Wrap"/>
+
+                <!-- 1. General Section -->
+                <StackPanel x:Name="GeneralPage">
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Nombre de la aplicación:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <DockPanel LastChildFill="True" Margin="0,0,0,14">
+                                <Button DockPanel.Dock="Right" Content="Buscar ID en WinGet" Click="SearchWingetCandidates_Click" Margin="8,0,0,0" Padding="12,6"/>
+                                <TextBox x:Name="NameText" MinHeight="36"/>
+                            </DockPanel>
+
+                            <TextBlock Text="Identificador WinGet:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <DockPanel LastChildFill="True">
+                                <Button DockPanel.Dock="Right" Content="Verificar" Click="VerifyWingetId_Click" Margin="8,0,0,0" Padding="14,6"/>
+                                <TextBox x:Name="WingetIdText" MinHeight="36" TextChanged="WingetIdText_TextChanged"/>
+                            </DockPanel>
+                            <TextBlock x:Name="WingetVerificationText" Text="ID pendiente de confirmar" FontSize="12" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Opciones de biblioteca" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <CheckBox x:Name="ExcludedCheck" Content="Excluir de las comprobaciones periódicas" Margin="0,0,0,8" Checked="ExcludedCheck_Changed" Unchecked="ExcludedCheck_Changed"/>
+                            <CheckBox x:Name="HiddenCheck" Content="Ocultar de la lista de aplicaciones" IsEnabled="{Binding IsChecked, ElementName=ExcludedCheck}" Margin="0,0,0,14"/>
+
+                            <TextBlock Text="Notas:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBox x:Name="NotesText" Height="70" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Ubicación local del instalador:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBox x:Name="InstallerPathText" IsReadOnly="True" Height="50" Padding="8,5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 2. Official Data Section -->
+                <StackPanel x:Name="OfficialDataPage" Visibility="Collapsed">
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Manifiesto y datos publicados por la fuente oficial:" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <TextBox x:Name="WingetDetailsText" IsReadOnly="True" Height="340" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Consolas, Segoe UI" VerticalContentAlignment="Top"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 3. Sources Section -->
+                <StackPanel x:Name="SourcesPage" Visibility="Collapsed">
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Repositorio oficial en GitHub (opcional):" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBox x:Name="GitHubRepositoryText" MinHeight="36" Margin="0,0,0,6"/>
+                            <TextBlock Text="Formato: propietario/repositorio o URL completa (ej. github.com/owner/repo)." FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="URL HTTPS alternativa directa (opcional):" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBox x:Name="OfficialSourceText" MinHeight="36" Margin="0,0,0,6"/>
+                            <TextBlock Text="URL directa al archivo instalador en caso de enlace alternativo." FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock Text="Arquitectura preferida:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <TextBox x:Name="ArchitectureText" MinHeight="36"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Text="Canal:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <TextBox x:Name="ChannelText" MinHeight="36"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- 4. Downloads Section -->
+                <StackPanel x:Name="DownloadsPage" Visibility="Collapsed">
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Política de conservación de versiones" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <RadioButton x:Name="UseGlobalPolicyRadio" Content="Usar la política general de opciones" GroupName="AppDownloadPolicy" IsChecked="True" Margin="0,4,0,8"/>
+                            <RadioButton x:Name="ReplacePolicyRadio" Content="Reemplazar el instalador anterior directamente" GroupName="AppDownloadPolicy" Margin="0,4,0,8"/>
+                            <RadioButton x:Name="ArchivePolicyRadio" Content="Mover la versión anterior a la carpeta de archivo" GroupName="AppDownloadPolicy" Margin="0,4,0,12"/>
+                            <TextBlock Text="El instalador descargado se revisa en preparación antes de promoverse. Nunca se ejecuta automáticamente." FontSize="12" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Bottom Dialog Actions -->
+        <Border Grid.Column="1" Grid.Row="1" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,1,0,0" Padding="20,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Guardar cambios" Style="{StaticResource PrimaryActionButton}" MinWidth="130" Margin="0,0,10,0" Click="Save_Click"/>
+                <Button Content="Cancelar" MinWidth="100" IsCancel="True"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
