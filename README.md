@@ -1,89 +1,145 @@
-# InstallerKeeper
+<div align="center">
+
+# 📦 InstallerKeeper
 
 ### Mantén tu biblioteca de instaladores siempre al día
 
-**InstallerKeeper** es una aplicación de escritorio moderna para Windows que organiza y supervisa tu colección local de archivos instaladores, consulta automáticamente las versiones oficiales más recientes mediante WinGet y GitHub Releases, y te permite descargar las actualizaciones de forma segura e intuitiva.
+Organiza tu colección local de instaladores, consulta las versiones oficiales más recientes en **WinGet** y **GitHub Releases** y descarga las actualizaciones de forma segura.
 
-[![Windows x64](https://img.shields.io/badge/Windows-x64-0078D4?style=flat-square&logo=windows11&logoColor=white)](https://microsoft.com/windows)
-[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
-[![Versión 1.1.6](https://img.shields.io/badge/versi%C3%B3n-1.1.6-087BFA?style=flat-square)](https://github.com)
-[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22C55E?style=flat-square)](LICENSE)
+[![Windows x64](https://img.shields.io/badge/Windows-x64-0078D4?style=for-the-badge&logo=windows11&logoColor=white)](https://www.microsoft.com/windows)
+[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
+[![Versión 1.1.6](https://img.shields.io/badge/versión-1.1.6-087BFA?style=for-the-badge)](https://github.com/elkekito/InstallerKeeper/releases/latest)
+[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22C55E?style=for-the-badge)](LICENSE)
+
+[**⬇️ Descargar la última versión**](https://github.com/elkekito/InstallerKeeper/releases/latest)
+
+</div>
 
 > [!NOTE]
-> InstallerKeeper administra exclusivamente **archivos instaladores**. No instala, ejecuta, actualiza ni desinstala el software residente en tu sistema operativo.
+> InstallerKeeper administra exclusivamente **archivos instaladores**. Nunca los ejecuta ni instala, actualiza o desinstala software de tu sistema.
 
 ---
 
-## ✨ Características principales
+## ✨ Lo que puedes hacer
 
-| Área | Capacidades |
-|---|---|
-| 📚 **Biblioteca versátil** | Soporte completo para instaladores `EXE`, `MSI`, `MSIX`, `MSIXBundle`, `APPX`, `APPXBundle` y `ZIP`. Inspección profunda de metadatos y arquitectura sin ejecutar archivos. |
-| 🎛️ **Interfaz Fluent Design** | Selector de vista dual (**Tabla** de alta densidad o **Tarjetas** visuales), panel lateral **Inspector rápido** (Drawer con SHA-256, tamaño, ruta directa y acceso al Explorador) y temas Claro, Oscuro y del Sistema. |
-| ⚡ **Alto rendimiento** | Comprobación en paralelo acelerada con limitación inteligente (throttling a 4 tareas simultáneas) y sistema de caché en memoria para manifiestos de WinGet. |
-| 🔎 **Identificación dual** | Integración nativa con **WinGet** y **GitHub Releases**. Resolución automática de la versión más reciente con desempate configurable. |
-| 🛡️ **Descargas seguras** | Descarga en aislamiento a la carpeta `%TEMP%` del sistema, a través del proxy configurado en Windows si lo hay (sin carpetas residuales en la biblioteca), comprobación estricta de hash **SHA-256**, verificación de firma digital **Authenticode** y comprobación de revocación de certificados online. |
-| 🧹 **Gestor de archivo (.Archive)** | Herramienta de purga integrada con retención configurable (conservar últimas 1 o 2 versiones, o limpieza total), cálculo en tiempo real de espacio recuperable y compatibilidad total con modo oscuro. |
-| 📊 **Exportación de catálogo** | Exporta la colección completa a **CSV** (con BOM para Excel), **JSON** formateado o un informe **HTML** estático y responsivo con estadísticas y badges de estado. |
+| | Función | Descripción |
+|:---:|---|---|
+| 📚 | **Biblioteca completa** | Detecta y analiza `EXE`, `MSI`, `MSIX`, `MSIXBundle`, `APPX`, `APPXBundle` y `ZIP`, con metadatos y arquitectura, sin ejecutar nada. |
+| 🔎 | **Doble fuente** | Consulta **WinGet** y **GitHub Releases** en paralelo y resuelve la versión más reciente. |
+| 🛡️ | **Descargas verificadas** | SHA-256, firma **Authenticode** y revocación online antes de promover cualquier archivo. |
+| 🎛️ | **Interfaz moderna** | Vista en **Tabla** o **Tarjetas**, panel **Inspector** y temas Claro, Oscuro o del Sistema. |
+| 🧹 | **Archivo `.Archive`** | Guarda versiones anteriores y purga las antiguas con retención configurable. |
+| 📊 | **Exportación** | Catálogo en **CSV** (compatible con Excel), **JSON** o informe **HTML**. |
+| ⚡ | **Arranque rápido** | Caché de análisis en disco: solo se vuelven a leer los archivos nuevos o modificados. |
 
 ---
 
 ## 🚀 Primeros pasos
 
-1. **Abre InstallerKeeper** y selecciona la carpeta de instaladores que deseas supervisar.
-2. **Configura el escaneo**: Decide si deseas incluir subdirectorios y personalizar carpetas.
-3. **Identifica tus aplicaciones**: Confirma los paquetes detectados mediante los identificadores oficiales sugeridos de WinGet o GitHub Releases.
-4. **Comprueba versiones**: Haz clic en **Comprobar todas** para una consulta paralela en segundo plano o comprueba aplicaciones individualmente.
-5. **Descarga actualizaciones**: Descarga los paquetes oficiales directamente; InstallerKeeper validará la firma e integridad antes de promoverlos a tu biblioteca bajo la política elegida (**Reemplazar**, **Archivar en .Archive** o **Conservar todas**).
+```mermaid
+flowchart LR
+    A["📁 Elige tu carpeta"] --> B["🔍 Analiza los instaladores"]
+    B --> C["🔄 Comprueba versiones"]
+    C --> D["⬇️ Descarga la actualización"]
+    D --> E["✅ Verifica y promueve"]
+```
+
+1. **Elige la carpeta** de instaladores que quieres supervisar y si incluir subcarpetas.
+2. **Confirma los paquetes** detectados con su identificador de WinGet o repositorio de GitHub.
+3. **Haz clic en «Comprobar todas»** para consultar todas las aplicaciones en paralelo.
+4. **Descarga** lo que tenga nueva versión. Solo se promueve lo que supera las comprobaciones.
 
 ---
 
-## 🔒 Seguridad e Integridad de Descargas
+## 🔒 Descargas seguras
 
-- **Aislamiento en preparación**: Los archivos se descargan en el directorio temporal seguro del sistema (`%TEMP%\InstallerKeeper\Downloads`).
-- **Verificación criptográfica**: Se calcula el digest SHA-256 del binario descargado y se valida contra el hash oficial publicado.
-- **Validación Authenticode**: Se verifica la cadena de certificados y revocación online. Los instaladores sin firma o con firmas inválidas quedan retenidos en preparación y no se promueven automáticamente. Los archivos firmados con catálogo, sin firma embebida, también quedan retenidos.
-- **Sin carpetas intermedias**: La biblioteca permanece siempre limpia, sin carpetas auxiliares ni directorios de promoción residuales.
-- **Promoción**: por defecto, InstallerKeeper pide confirmación antes de promover. Puedes activar en Opciones la promoción automática de descargas verificadas, o ocultar todos los mensajes de descarga y promoción. En ambos casos, solo se promueve lo que supera las comprobaciones de seguridad.
-- **Proxy**: las descargas usan el proxy configurado en Windows. Con proxy, el proxy decide el destino final de la conexión.
+Cada descarga pasa por un proceso de varias comprobaciones antes de llegar a tu biblioteca:
+
+```mermaid
+flowchart LR
+    D["🌐 HTTPS"] --> T["🗂️ %TEMP%<br/>aislado"]
+    T --> H{"SHA-256<br/>coincide"}
+    H -- sí --> S{"Firma Authenticode<br/>y revocación OK"}
+    H -- no --> R["⛔ Retenido"]
+    S -- sí --> P["📥 Promoción<br/>a tu biblioteca"]
+    S -- no --> R
+```
+
+| Comprobación | Qué garantiza |
+|---|---|
+| **HTTPS** | Solo conexiones cifradas. |
+| **SHA-256** | El archivo coincide con el hash oficial publicado. |
+| **Authenticode** | Firma digital válida y cadena de certificados verificada. |
+| **Revocación online** | Certificados revocados quedan descartados. |
+| **Sin residuos** | La biblioteca nunca recibe carpetas auxiliares. |
+
+### Políticas de promoción
+
+| Política | Resultado |
+|---|---|
+| 🔁 **Reemplazar** | La nueva versión sustituye a la anterior. |
+| 🗃️ **Archivar** | La versión anterior pasa a `.Archive`. |
+| 📚 **Conservar todas** | La nueva versión se guarda con nombre único. |
+
+Por defecto se pide confirmación antes de promover. En **Opciones** puedes activar la promoción automática de descargas verificadas o [ocultar los mensajes de descarga y promoción](#-opciones). En ambos casos, solo se promueve lo que supera las comprobaciones.
 
 ---
 
-## 📋 Requisitos del sistema
+## 🌍 Proxy
 
-- **Sistema Operativo**: Windows 10 / Windows 11 (x64).
-- **Herramientas opcionales**: Windows Package Manager (`winget`) para la consulta de paquetes WinGet (no requerido para aplicaciones configuradas exclusivamente mediante GitHub Releases).
-- **Runtime**: No se requiere instalar .NET por separado (publicación autocontenida).
-- **GitHub**: sin token, las consultas a GitHub Releases tienen un límite de 60 por hora.
+Las descargas usan el **proxy configurado en Windows**. Con proxy, el proxy decide el destino final de la conexión, así que la comprobación de IP pública no cubre ese destino.
 
 ---
 
-## 🛠️ Compilación y Publicación
+## ⚙️ Opciones
 
-Con el SDK de .NET 10 instalado, ejecuta desde la raíz del repositorio:
+- **Promoción automática** de descargas verificadas (desactivada por defecto).
+- **Ocultar mensajes** de descarga y promoción; los avisos se muestran en la barra de estado.
+- **Temas** Claro, Oscuro o del Sistema y vistas Tabla o Tarjetas.
+
+---
+
+## 📋 Requisitos
+
+| Requisito | Detalle |
+|---|---|
+| 🪟 **Sistema** | Windows 10 o Windows 11 (x64) |
+| 📦 **WinGet** | Opcional. Solo hace falta para paquetes de WinGet. |
+| 🧩 **.NET** | No hace falta instalarlo: el ejecutable es autocontenido. |
+| 🔑 **GitHub** | Sin token, el límite es de 60 consultas por hora. |
+
+---
+
+## 🛠️ Compilar y publicar
+
+Requiere el **SDK de .NET 10**. Desde la raíz del repositorio, en PowerShell:
 
 ```powershell
 dotnet publish .\src\InstallerKeeper\InstallerKeeper.csproj --configuration Release -p:PublishProfile=WinX64 -p:PublishDir=..\..\artifacts\publish\1.1.6\win-x64\
 ```
 
-El ejecutable independiente se genera en:
-`artifacts/publish/1.1.6/win-x64/InstallerKeeper.exe`
-
-Para publicar con pruebas incluidas y mostrar el SHA-256:
+El ejecutable queda en `artifacts\publish\1.1.6\win-x64\InstallerKeeper.exe`. Para publicar y mostrar su SHA-256 con el script de ayuda:
 
 ```powershell
 .\scripts\Publish-InstallerKeeper.ps1
 ```
 
-
 ---
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia [MIT](LICENSE).
+Distribuido bajo la licencia [MIT](LICENSE).
 
-Se incluyen referencias y avisos de componentes de terceros:
+Componentes de terceros:
 - [Licencias de .NET para Windows](https://github.com/dotnet/core/blob/main/license-information-windows.md)
 - [Licencia de Bibliotecas de .NET](https://dotnet.microsoft.com/en-us/dotnet_library_license.htm)
 - [Licencia del código fuente de WPF](https://github.com/dotnet/wpf/blob/main/LICENSE.TXT)
 - [Licencia de Windows Package Manager CLI (WinGet)](https://github.com/microsoft/winget-cli/blob/master/LICENSE)
+
+<div align="center">
+
+---
+
+Hecho con ❤️ para Windows
+
+</div>
