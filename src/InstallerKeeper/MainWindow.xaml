@@ -1,0 +1,677 @@
+<Window x:Class="InstallerKeeper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="InstallerKeeper"
+        Width="1240" Height="780" MinWidth="1020" MinHeight="580"
+        Foreground="{DynamicResource TextBrush}"
+        Background="{DynamicResource AppBackgroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        Icon="{StaticResource BrandIcon}"
+        Loaded="MainWindow_Loaded">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="0"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar Layout Mode -->
+        <Border x:Name="SidebarPanel" Grid.Column="0" Visibility="Collapsed"
+                Background="{DynamicResource AppBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="14,18">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="BIBLIOTECA" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedBrush}" Margin="10,2,0,7"/>
+                    <Button x:Name="SidebarAllFilter" Tag="All" Style="{StaticResource SidebarFilterButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource NeutralBadgeBrush}" CornerRadius="7" Padding="7,2" Margin="8,0,0,0">
+                                <TextBlock x:Name="SidebarAllCountText" Text="0" Foreground="{DynamicResource BadgeTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="{StaticResource PackageIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                                <TextBlock Text="Instaladores" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="SidebarUpdatesFilter" Tag="Updates" Style="{StaticResource SidebarFilterButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource WarningBadgeBrush}" CornerRadius="7" Padding="7,2" Margin="8,0,0,0">
+                                <TextBlock x:Name="SidebarUpdatesCountText" Text="0" Foreground="{DynamicResource WarningBadgeTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="{StaticResource DownloadIconGeometry}" Fill="{DynamicResource WarningBadgeTextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                                <TextBlock Text="Actualizaciones" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="SidebarCurrentFilter" Tag="Current" Style="{StaticResource SidebarFilterButton}" Click="StatusFilter_Click" Visibility="Collapsed">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource PositiveBadgeBrush}" CornerRadius="7" Padding="7,2" Margin="8,0,0,0">
+                                <TextBlock x:Name="SidebarCurrentCountText" Text="0" Foreground="{DynamicResource PositiveBadgeTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="{StaticResource CheckIconGeometry}" Fill="{DynamicResource PositiveBadgeTextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                                <TextBlock Text="Actualizadas" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="SidebarPendingFilter" Tag="Pending" Style="{StaticResource SidebarFilterButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource InfoBadgeBrush}" CornerRadius="7" Padding="7,2" Margin="8,0,0,0">
+                                <TextBlock x:Name="SidebarPendingCountText" Text="0" Foreground="{DynamicResource InfoBadgeTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="{StaticResource HelpIconGeometry}" Fill="{DynamicResource InfoBadgeTextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                                <TextBlock Text="Por identificar" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="SidebarHiddenFilter" Tag="Hidden" Style="{StaticResource SidebarFilterButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource NeutralBadgeBrush}" CornerRadius="7" Padding="7,2" Margin="8,0,0,0">
+                                <TextBlock x:Name="SidebarHiddenCountText" Text="0" Foreground="{DynamicResource BadgeTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <TextBlock Text="◉   Ocultos" VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </Button>
+                    <TextBlock Text="APLICACIÓN" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedBrush}" Margin="10,24,0,7"/>
+                    <Button x:Name="SidebarExportButton" Style="{StaticResource SidebarFilterButton}" Click="ExportCatalog_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path Data="{StaticResource DownloadIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                            <TextBlock Text="Exportar catálogo" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="SidebarOptionsButton" Style="{StaticResource SidebarFilterButton}" Click="Options_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path Data="{StaticResource SettingsIconGeometry}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0"/>
+                            <TextBlock Text="Opciones" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <Border Grid.Row="1" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Comprobación al día" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock x:Name="SidebarFreshnessText" Text="Sin comprobar" Foreground="{DynamicResource TextBrush}" FontSize="11" Margin="0,4,0,0"/>
+                        <TextBlock Text="Los resultados siguen vigentes mientras actualizas el resto." TextWrapping="Wrap"
+                                   Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid x:Name="MainContent" Grid.Column="1" Margin="22,18,22,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top Header & Brand -->
+            <DockPanel Grid.Row="0" Margin="0,0,0,14">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Button x:Name="ExportCatalogButton" Style="{StaticResource QuietButton}" Click="ExportCatalog_Click" Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path Data="{StaticResource DownloadIconGeometry}" Fill="{DynamicResource TextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,7,0"/>
+                            <TextBlock Text="Exportar catálogo" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="OptionsButton" Style="{StaticResource QuietButton}" Click="Options_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path Data="{StaticResource SettingsIconGeometry}" Fill="{DynamicResource TextBrush}" Width="15" Height="15" Stretch="Uniform" Margin="0,0,7,0"/>
+                            <TextBlock Text="Opciones" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="{StaticResource BrandIcon}" Width="38" Height="38" Margin="0,0,12,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="InstallerKeeper" FontSize="19" FontWeight="Bold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock x:Name="BrandSubtitle" Text="Mantén tus instaladores siempre actualizados" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Actions Bar & Search -->
+            <Grid Grid.Row="1" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Search Box -->
+                <Border Grid.Column="0" Height="36" Background="{DynamicResource FieldBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="34"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Path Data="{StaticResource SearchIconGeometry}" Fill="{DynamicResource MutedBrush}"
+                              Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <TextBox x:Name="SearchBox"
+                                     TextChanged="SearchBox_TextChanged"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Foreground="{DynamicResource TextBrush}"
+                                     CaretBrush="{DynamicResource TextBrush}"
+                                     FontSize="13"
+                                     Padding="0"
+                                     MinHeight="0"
+                                     Height="26"
+                                     VerticalContentAlignment="Center"
+                                     ToolTip="Buscar por nombre o editor"/>
+                            <TextBlock Text="Buscar por nombre o editor…"
+                                       IsHitTestVisible="False"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MutedBrush}"
+                                       FontSize="13"
+                                       Margin="2,0,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                        <Button Grid.Column="2" x:Name="ClearSearchButton"
+                                Padding="0" Click="ClearSearch_Click" ToolTip="Limpiar búsqueda">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource QuietButton}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Path Data="{StaticResource CloseIconGeometry}" Fill="{DynamicResource MutedBrush}" Width="10" Height="10" Stretch="Uniform"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="RefreshListButton" Style="{StaticResource QuietButton}" Click="RefreshApplications_Click" Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource RefreshIconGeometry}" Fill="{DynamicResource TextBrush}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,6,0"/>
+                            <TextBlock Text="Actualizar lista"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="CheckAllButton" Style="{StaticResource PrimaryActionButton}" Click="CheckAll_Click" Margin="0,0,7,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource RefreshIconGeometry}" Fill="White" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0"/>
+                            <TextBlock Text="Comprobar todas"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="DownloadAllButton" ToolTip="Descarga todas las actualizaciones comprobadas y listas para descargar."
+                            Style="{StaticResource SuccessActionButton}" Click="DownloadAll_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource DownloadIconGeometry}" Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,7,0"/>
+                            <TextBlock Text="Descargar actualizaciones"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Metrics Pills & View Mode Switcher -->
+            <Grid Grid.Row="2" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Filter Pills -->
+                <StackPanel x:Name="WorkPanelFilters" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="WorkAllFilter" Tag="All" Style="{StaticResource FilterPillButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource NeutralBadgeBrush}" CornerRadius="6" Padding="6,1" Margin="6,0,0,0">
+                                <TextBlock x:Name="WorkAllCountText" Text="0" Foreground="{DynamicResource BadgeTextBrush}" FontSize="11" FontWeight="Bold"/>
+                            </Border>
+                            <TextBlock Text="Todas" VerticalAlignment="Center" FontWeight="Medium"/>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="WorkUpdatesFilter" Tag="Updates" Style="{StaticResource FilterPillButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource WarningBadgeBrush}" CornerRadius="6" Padding="6,1" Margin="6,0,0,0">
+                                <TextBlock x:Name="WorkUpdatesCountText" Text="0" Foreground="{DynamicResource WarningBadgeTextBrush}" FontSize="11" FontWeight="Bold"/>
+                            </Border>
+                            <TextBlock Text="Actualizaciones" VerticalAlignment="Center" FontWeight="Medium"/>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="WorkCurrentFilter" Tag="Current" Style="{StaticResource FilterPillButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource PositiveBadgeBrush}" CornerRadius="6" Padding="6,1" Margin="6,0,0,0">
+                                <TextBlock x:Name="WorkCurrentCountText" Text="0" Foreground="{DynamicResource PositiveBadgeTextBrush}" FontSize="11" FontWeight="Bold"/>
+                            </Border>
+                            <TextBlock Text="Al día" VerticalAlignment="Center" FontWeight="Medium"/>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="WorkPendingFilter" Tag="Pending" Style="{StaticResource FilterPillButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource InfoBadgeBrush}" CornerRadius="6" Padding="6,1" Margin="6,0,0,0">
+                                <TextBlock x:Name="WorkPendingCountText" Text="0" Foreground="{DynamicResource InfoBadgeTextBrush}" FontSize="11" FontWeight="Bold"/>
+                            </Border>
+                            <TextBlock Text="Por identificar" VerticalAlignment="Center" FontWeight="Medium"/>
+                        </DockPanel>
+                    </Button>
+                    <Button x:Name="WorkHiddenFilter" Tag="Hidden" Style="{StaticResource FilterPillButton}" Click="StatusFilter_Click">
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Right" Background="{DynamicResource NeutralBadgeBrush}" CornerRadius="6" Padding="6,1" Margin="6,0,0,0">
+                                <TextBlock x:Name="WorkHiddenCountText" Text="0" Foreground="{DynamicResource BadgeTextBrush}" FontSize="11" FontWeight="Bold"/>
+                            </Border>
+                            <TextBlock Text="Ocultos" VerticalAlignment="Center" FontWeight="Medium"/>
+                        </DockPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- View Switcher (Table / Cards / Inspector Toggle) -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="ToggleInspectorButton" Style="{StaticResource QuietButton}" Padding="8,5" Margin="0,0,8,0"
+                            Click="ToggleInspector_Click" ToolTip="Mostrar u ocultar panel de detalles">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource InfoIconGeometry}" Fill="{DynamicResource TextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0"/>
+                            <TextBlock Text="Detalles" FontSize="12"/>
+                        </StackPanel>
+                    </Button>
+                    <Border Background="{DynamicResource FieldBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="2">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="ViewTableButton" Tag="Table" Style="{StaticResource QuietButton}" Padding="8,4" MinHeight="26"
+                                    Click="SwitchViewMode_Click" ToolTip="Vista en tabla">
+                                <Path Data="{StaticResource ListIconGeometry}" Fill="{DynamicResource TextBrush}" Width="14" Height="14" Stretch="Uniform"/>
+                            </Button>
+                            <Button x:Name="ViewCardsButton" Tag="Cards" Style="{StaticResource QuietButton}" Padding="8,4" MinHeight="26"
+                                    Click="SwitchViewMode_Click" ToolTip="Vista en cuadrícula de tarjetas">
+                                <Path Data="{StaticResource GridIconGeometry}" Fill="{DynamicResource TextBrush}" Width="14" Height="14" Stretch="Uniform"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- Main Content: Table / Cards + Inspector Drawer -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition x:Name="InspectorColumn" Width="0"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Content: Table or Cards View -->
+                <Border Grid.Column="0" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1" CornerRadius="12" Padding="1" ClipToBounds="True">
+                    <Grid>
+                        <!-- 1. Table View (DataGrid) -->
+                        <Grid x:Name="TableViewContainer">
+                            <DataGrid x:Name="ApplicationsGrid" ItemsSource="{Binding InstallersView}" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" HeadersVisibility="Column" CanUserSortColumns="True"
+                                      GridLinesVisibility="None" BorderThickness="0" RowHeight="52" RowHeaderWidth="0"
+                                      CanUserResizeRows="False" EnableRowVirtualization="True" EnableColumnVirtualization="True"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.CanContentScroll="True"
+                                      AlternationCount="2" SelectionMode="Single" SelectionUnit="FullRow"
+                                      SelectionChanged="Applications_SelectionChanged"
+                                      Background="{DynamicResource PanelBrush}" Foreground="{DynamicResource TextBrush}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Aplicación" Width="2.3*" SortMemberPath="Name">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Border Width="34" Height="34" CornerRadius="8" Background="{DynamicResource NeutralBadgeBrush}"
+                                                            Margin="4,0,10,0" ClipToBounds="True">
+                                                        <Grid>
+                                                            <TextBlock Text="{Binding Name, Converter={StaticResource NameInitialsConverter}}"
+                                                                       FontWeight="Bold" Foreground="{DynamicResource BadgeTextBrush}"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            <Image Source="{Binding LocalFilePath, Converter={StaticResource ShellIconConverter}}"
+                                                                   Width="30" Height="30" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                                                        <TextBlock Text="{Binding WingetId}" FontSize="11" Foreground="{DynamicResource MutedBrush}">
+                                                            <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsIdentified}" Value="False"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding PackageType, StringFormat={}{0} · Sin identificar}" FontSize="11" Foreground="{DynamicResource MutedBrush}">
+                                                            <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding IsIdentified}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Descargada" Width="1.1*" SortMemberPath="CurrentVersion">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Path Data="{StaticResource CheckIconGeometry}" Fill="{DynamicResource SuccessBrush}"
+                                                          Width="12" Height="12" Stretch="Uniform" Margin="0,0,5,0">
+                                                        <Path.Style><Style TargetType="Path"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="Actualizado"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></Path.Style>
+                                                    </Path>
+                                                    <TextBlock Text="{Binding CurrentVersion}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Disponible" Width="1.1*" SortMemberPath="OfficialVersion">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Path Data="{StaticResource CheckIconGeometry}" Fill="{DynamicResource SuccessBrush}"
+                                                          Width="12" Height="12" Stretch="Uniform" Margin="0,0,5,0">
+                                                        <Path.Style><Style TargetType="Path"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="Actualizado"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></Path.Style>
+                                                    </Path>
+                                                    <TextBlock Text="{Binding OfficialVersion}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Estado" Width="1.15*" SortMemberPath="Status">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource StatusBadgeStyle}">
+                                                    <TextBlock Text="{Binding Status}" Style="{StaticResource StatusBadgeTextStyle}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Acción" Width="230">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                    <Button Content="Comprobar" Padding="9,5" Margin="0,0,5,0" Tag="{Binding}"
+                                                            Click="CheckOne_Click" Visibility="{Binding IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                    <Button Content="Descargar" Style="{StaticResource RowDownloadButton}" Tag="{Binding}"
+                                                            Click="DownloadOne_Click" Visibility="{Binding IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                    <Button Content="Identificar" Style="{StaticResource PrimaryActionButton}" Padding="10,5" Tag="{Binding}"
+                                                            Click="IdentifyOne_Click" Visibility="{Binding IsPendingIdentification, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                    <Button Content="⋯" Style="{StaticResource AppRowOptionsButton}" Tag="{Binding}" Margin="5,0,0,0"
+                                                            Click="AppOptions_Click"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                        <!-- 2. Cards View (ListBox with WrapPanel) -->
+                        <Grid x:Name="CardsViewContainer" Visibility="Collapsed">
+                            <ListBox x:Name="ApplicationsCardsList" ItemsSource="{Binding InstallersView}"
+                                     ItemContainerStyle="{StaticResource InstallerCardItemStyle}"
+                                     SelectionChanged="Applications_SelectionChanged"
+                                     Background="Transparent" BorderThickness="0"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" Margin="8"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Header: Icon, Name & Options -->
+                                            <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,10">
+                                                <Button DockPanel.Dock="Right" Content="⋯" Style="{StaticResource AppRowOptionsButton}" Tag="{Binding}"
+                                                        Click="AppOptions_Click" VerticalAlignment="Top"/>
+                                                <Border Width="38" Height="38" CornerRadius="8" Background="{DynamicResource NeutralBadgeBrush}"
+                                                        Margin="0,0,10,0" ClipToBounds="True" VerticalAlignment="Center">
+                                                    <Grid>
+                                                        <TextBlock Text="{Binding Name, Converter={StaticResource NameInitialsConverter}}"
+                                                                   FontWeight="Bold" Foreground="{DynamicResource BadgeTextBrush}"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        <Image Source="{Binding LocalFilePath, Converter={StaticResource ShellIconConverter}}"
+                                                               Width="34" Height="34" Stretch="Uniform"/>
+                                                    </Grid>
+                                                </Border>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextBrush}"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding FormattedFileSize}" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                                </StackPanel>
+                                            </DockPanel>
+
+                                            <!-- Versions Info -->
+                                            <Grid Grid.Row="1" Margin="0,0,0,10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Descargada" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                                    <TextBlock Text="{Binding CurrentVersion}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="Disponible" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                                    <TextBlock Text="{Binding OfficialVersion}" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource PrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Status Badge -->
+                                            <Border Grid.Row="2" Style="{StaticResource StatusBadgeStyle}" Margin="0,0,0,12">
+                                                <TextBlock Text="{Binding Status}" Style="{StaticResource StatusBadgeTextStyle}"/>
+                                            </Border>
+
+                                            <!-- Card Actions -->
+                                            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <Button Content="Comprobar" Padding="8,5" Margin="0,0,5,0" Tag="{Binding}"
+                                                        Click="CheckOne_Click" Visibility="{Binding IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                <Button Content="Descargar" Style="{StaticResource RowDownloadButton}" Tag="{Binding}"
+                                                        Click="DownloadOne_Click" Visibility="{Binding IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                <Button Content="Identificar" Style="{StaticResource PrimaryActionButton}" Padding="10,5" Tag="{Binding}"
+                                                        Click="IdentifyOne_Click" Visibility="{Binding IsPendingIdentification, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+
+                        <!-- Empty State -->
+                        <StackPanel x:Name="EmptyStatePanel" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    IsHitTestVisible="False" Visibility="Collapsed">
+                            <Path Data="{StaticResource PackageIconGeometry}" Fill="{DynamicResource MutedBrush}" Width="48" Height="48" Stretch="Uniform" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="EmptyStateTitle" Text="No hay instaladores" FontSize="17" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center" Margin="0,12,0,4"/>
+                            <TextBlock Text="Elige una carpeta en Opciones para empezar a supervisar." Foreground="{DynamicResource MutedBrush}"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Right Content: Inspector Drawer -->
+                <Border x:Name="InspectorPanel" Grid.Column="1" Margin="14,0,0,0" Background="{DynamicResource DrawerBackgroundBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="16" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel>
+                            <!-- Drawer Header -->
+                            <DockPanel LastChildFill="True" Margin="0,0,0,14">
+                                <Button DockPanel.Dock="Right" Style="{StaticResource QuietButton}" Padding="4" Click="CloseInspector_Click" ToolTip="Cerrar detalles">
+                                    <Path Data="{StaticResource CloseIconGeometry}" Fill="{DynamicResource MutedBrush}" Width="12" Height="12" Stretch="Uniform"/>
+                                </Button>
+                                <TextBlock Text="Detalles del instalador" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            </DockPanel>
+
+                            <!-- App Identity -->
+                            <Border Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource SubtleBorderBrush}"
+                                    BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                        <Border Width="44" Height="44" CornerRadius="8" Background="{DynamicResource NeutralBadgeBrush}"
+                                                Margin="0,0,10,0" ClipToBounds="True">
+                                            <Grid>
+                                                <TextBlock Text="{Binding SelectedEntry.Name, Converter={StaticResource NameInitialsConverter}}"
+                                                           FontWeight="Bold" Foreground="{DynamicResource BadgeTextBrush}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <Image Source="{Binding SelectedEntry.LocalFilePath, Converter={StaticResource ShellIconConverter}}"
+                                                       Width="38" Height="38" Stretch="Uniform"/>
+                                            </Grid>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding SelectedEntry.Name}" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextBrush}" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding SelectedEntry.PackageType, StringFormat='Formato: {0}'}" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                        </StackPanel>
+                                    </DockPanel>
+
+                                    <!-- Status Pill -->
+                                    <Border Style="{StaticResource StatusBadgeStyle}" Margin="0,4,0,0">
+                                        <TextBlock Text="{Binding SelectedEntry.Status}" Style="{StaticResource StatusBadgeTextStyle}"/>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Version Details -->
+                            <Border Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource SubtleBorderBrush}"
+                                    BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Versión local" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                        <TextBlock Text="{Binding SelectedEntry.CurrentVersion}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextBrush}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="Versión oficial" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                        <TextBlock Text="{Binding SelectedEntry.OfficialVersion}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource PrimaryBrush}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- File Info Section -->
+                            <TextBlock Text="ARCHIVO LOCAL" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedBrush}" Margin="2,0,0,6"/>
+                            <Border Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource SubtleBorderBrush}"
+                                    BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="Nombre del archivo:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock Text="{Binding SelectedEntry.FileNameOnly}" FontWeight="Medium" FontSize="12" TextWrapping="Wrap" Margin="0,1,0,8"/>
+
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Tamaño:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                            <TextBlock Text="{Binding SelectedEntry.FormattedFileSize}" FontWeight="SemiBold" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Fecha:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                            <TextBlock Text="{Binding SelectedEntry.FormattedFileDate}" FontWeight="SemiBold" FontSize="12"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock Text="Ruta completa:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBox Text="{Binding SelectedEntry.LocalFilePath, Mode=OneWay}" IsReadOnly="True"
+                                             FontSize="11" Background="{DynamicResource FieldBrush}" Padding="6,4" Margin="0,2,0,8"
+                                             TextWrapping="Wrap" MaxHeight="60" VerticalScrollBarVisibility="Auto"/>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Style="{StaticResource QuietButton}" Padding="8,4" Click="CopyPath_Click" Margin="0,0,6,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource CopyIconGeometry}" Fill="{DynamicResource TextBrush}" Width="11" Height="11" Stretch="Uniform" Margin="0,0,5,0"/>
+                                                <TextBlock Text="Copiar ruta" FontSize="11"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource QuietButton}" Padding="8,4" Click="OpenFolder_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource FolderIconGeometry}" Fill="{DynamicResource TextBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,5,0"/>
+                                                <TextBlock Text="Abrir carpeta" FontSize="11"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Security & Sources -->
+                            <TextBlock Text="SEGURIDAD Y FUENTES" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedBrush}" Margin="2,0,0,6"/>
+                            <Border Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource SubtleBorderBrush}"
+                                    BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="ID WinGet:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock Text="{Binding SelectedEntry.WingetId, TargetNullValue='No asignado'}" FontWeight="Medium" FontSize="12" Margin="0,1,0,8"/>
+
+                                    <TextBlock Text="Hash SHA-256 oficial:" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBox Text="{Binding SelectedEntry.OfficialSha256, Mode=OneWay, TargetNullValue='Sin hash publicado'}" IsReadOnly="True"
+                                             FontSize="11" Background="{DynamicResource FieldBrush}" Padding="6,4" Margin="0,2,0,6"
+                                             TextWrapping="Wrap" MaxHeight="50" VerticalScrollBarVisibility="Auto"/>
+
+                                    <Button Style="{StaticResource QuietButton}" HorizontalAlignment="Left" Padding="8,4" Click="CopySha256_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="{StaticResource CopyIconGeometry}" Fill="{DynamicResource TextBrush}" Width="11" Height="11" Stretch="Uniform" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Copiar SHA-256" FontSize="11"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Inspector Action Buttons -->
+                            <StackPanel Margin="0,6,0,0">
+                                <Button Content="Descargar actualización" Style="{StaticResource SuccessActionButton}" Margin="0,0,0,7"
+                                        Tag="{Binding SelectedEntry}" Click="DownloadOne_Click"
+                                        Visibility="{Binding SelectedEntry.IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Comprobar versión" Style="{StaticResource PrimaryActionButton}" Margin="0,0,0,7"
+                                        Tag="{Binding SelectedEntry}" Click="CheckOne_Click"
+                                        Visibility="{Binding SelectedEntry.IsIdentified, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Opciones de la aplicación" Style="{StaticResource QuietButton}"
+                                        Tag="{Binding SelectedEntry}" Click="AppOptions_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <!-- Bottom Status Bar & Enhanced Feedback -->
+            <Border Grid.Row="4" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1" CornerRadius="10" Padding="14,9" Margin="0,12,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Path Data="{StaticResource DownloadIconGeometry}" Fill="{DynamicResource PrimaryBrush}"
+                          Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" ToolTip="{Binding StatusMessage}"
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="DownloadProgressText" Grid.Column="2" Text="" Foreground="{DynamicResource MutedBrush}"
+                               FontWeight="SemiBold" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    <ProgressBar x:Name="OperationProgressBar" Grid.Column="3" Height="6" Minimum="0" Maximum="100"
+                                 Visibility="Collapsed" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CheckFreshnessText" Grid.Column="4" Text="Comprobar todas: pendiente"
+                               FontSize="11" Foreground="{DynamicResource MutedBrush}" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

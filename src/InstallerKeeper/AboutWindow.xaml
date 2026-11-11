@@ -1,0 +1,49 @@
+<Window x:Class="InstallerKeeper.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Acerca de InstallerKeeper"
+        Width="650" Height="560" MinWidth="580" MinHeight="500"
+        Background="{DynamicResource PanelBrush}"
+        WindowStartupLocation="CenterOwner"
+        Icon="{StaticResource BrandIcon}">
+    <Grid Margin="28">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,18">
+            <Image Source="{StaticResource BrandIcon}" Width="66" Height="66" Margin="0,0,17,0"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="InstallerKeeper" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock x:Name="VersionText" Foreground="{DynamicResource MutedBrush}"/>
+                <TextBlock Text="Mantén tus instaladores siempre actualizados" Foreground="{DynamicResource TextBrush}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12">
+            <StackPanel>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,15"
+                           Foreground="{DynamicResource TextBrush}"
+                           Text="InstallerKeeper analiza archivos instaladores, muestra la información disponible y está diseñado para consultar versiones oficiales y permitir su descarga. No instala ni modifica software del sistema."/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,15"
+                           Foreground="{DynamicResource TextBrush}"
+                           Text="Los nombres y marcas de terceros pertenecen a sus respectivos propietarios. InstallerKeeper no implica afiliación ni respaldo por parte de los fabricantes consultados."/>
+                <TextBlock Text="© 2026 InstallerKeeper. Todos los derechos reservados." Foreground="{DynamicResource TextBrush}" Margin="0,0,0,12"/>
+                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
+                <TextBlock Text="Licencia de InstallerKeeper" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,4"/>
+                <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,12">
+                    InstallerKeeper se distribuye bajo la licencia MIT.
+                    <LineBreak/><Hyperlink NavigateUri="https://github.com/elkekito/InstallerKeeper/blob/main/LICENSE" RequestNavigate="LicenseLink_RequestNavigate">Consultar el archivo LICENSE</Hyperlink>
+                </TextBlock>
+                <TextBlock Text="Componentes y servicios de terceros" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,4"/>
+                <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}">
+                    La publicación autocontenida incluye componentes de ejecución de .NET para Windows y utiliza herramientas del Administrador de paquetes de Windows (WinGet). El proyecto no declara paquetes NuGet de terceros.
+                    <LineBreak/><Hyperlink NavigateUri="https://github.com/dotnet/core/blob/main/license-information-windows.md" RequestNavigate="LicenseLink_RequestNavigate">Licencias de .NET para Windows</Hyperlink>
+                    <LineBreak/><Hyperlink NavigateUri="https://dotnet.microsoft.com/en-us/dotnet_library_license.htm" RequestNavigate="LicenseLink_RequestNavigate">Licencia de bibliotecas de .NET</Hyperlink>
+                    <LineBreak/><Hyperlink NavigateUri="https://github.com/dotnet/wpf/blob/main/LICENSE.TXT" RequestNavigate="LicenseLink_RequestNavigate">Licencia del código fuente de WPF (MIT)</Hyperlink>
+                    <LineBreak/><Hyperlink NavigateUri="https://github.com/microsoft/winget-cli/blob/master/LICENSE" RequestNavigate="LicenseLink_RequestNavigate">Licencia de Windows Package Manager CLI (MIT)</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button Grid.Row="2" Content="Aceptar" Width="105" HorizontalAlignment="Right" IsCancel="True"
+                Background="{DynamicResource PrimaryBrush}" Foreground="White" BorderThickness="0" Padding="16,8"/>
+    </Grid>
+</Window>

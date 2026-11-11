@@ -1,0 +1,58 @@
+<Window x:Class="InstallerKeeper.FirstRunWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bienvenido a InstallerKeeper"
+        Width="700" Height="465" MinWidth="620" MinHeight="420"
+        ResizeMode="CanResize"
+        Foreground="{DynamicResource TextBrush}"
+        Background="{DynamicResource AppBackgroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        Icon="{StaticResource BrandIcon}">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+            <Image Source="{StaticResource BrandIcon}" Width="48" Height="48" Margin="0,0,14,0"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Bienvenido a InstallerKeeper" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" TextWrapping="Wrap"/>
+                <TextBlock Text="Vamos a configurar tu biblioteca de instaladores." Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1" CornerRadius="12" Padding="20">
+            <StackPanel>
+                <TextBlock Text="¿Qué carpeta quieres analizar?" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock Text="InstallerKeeper buscará instaladores en esta carpeta. Podrás cambiarla más adelante en Opciones > Carpetas."
+                           TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,6,0,16" MaxWidth="610"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="InstallerFolderTextBox" MinHeight="36"
+                             TextChanged="InstallerFolder_TextChanged" ToolTip="Selecciona la carpeta que contiene tus instaladores"/>
+                    <Button Grid.Column="1" Content="Examinar…" Margin="10,0,0,0" Padding="16,6" Click="BrowseFolder_Click"/>
+                </Grid>
+                <CheckBox x:Name="IncludeSubdirectoriesCheckBox" Content="Incluir también las subcarpetas"
+                          ToolTip="Buscar instaladores en las carpetas que haya dentro de la carpeta seleccionada."
+                          Margin="0,14,0,0"/>
+                <TextBlock Text="Puedes cambiar esta opción más adelante en Opciones > Carpetas."
+                           Foreground="{DynamicResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="22,3,0,0"/>
+                <TextBlock x:Name="ValidationMessage" Text="Selecciona una carpeta existente para continuar."
+                           Foreground="{DynamicResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,14,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="Salir" MinWidth="100" Margin="0,0,10,0" Click="Cancel_Click"/>
+            <Button x:Name="ContinueButton" Content="Analizar carpeta" MinWidth="150" IsDefault="True"
+                    Background="{DynamicResource PrimaryBrush}" Foreground="White" BorderThickness="0"
+                    IsEnabled="False" Click="Continue_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
